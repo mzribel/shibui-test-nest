@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { SupabaseService } from '../supabase.service';
-import { ITemplateRepository } from '../../../../../modules/template/interfaces/i-template.repository';
 import { CreateTemplateDto } from '../../../../../modules/template/dtos/create-template.dto';
 import { TemplateModel } from '../../../../../modules/template/models/template.model';
+import { ITemplateRepository } from '../../../../../modules/template/repositories/i-template.repository';
 
 @Injectable()
 export class SupabaseTemplateRepository implements ITemplateRepository {
