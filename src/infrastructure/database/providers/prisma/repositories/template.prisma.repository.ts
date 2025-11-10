@@ -5,7 +5,7 @@ import { PrismaService } from '../prisma.service';
 import { ITemplateRepository } from '../../../../../modules/template/repositories/i-template.repository';
 
 @Injectable()
-export class PrismaTemplateRepository implements ITemplateRepository {
+export class TemplatePrismaRepository implements ITemplateRepository {
   constructor(private readonly prisma: PrismaService) {
   }
 

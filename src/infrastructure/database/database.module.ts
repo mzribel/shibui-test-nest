@@ -1,7 +1,6 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from './providers/prisma/prisma.module';
-import { SupabaseModule } from './providers/supabase/supabase.module';
 
 @Module({})
 export class DatabaseModule {
@@ -18,13 +17,11 @@ export class DatabaseModule {
   }
 
   static forFeature(): DynamicModule {
-    const provider = process.env.DATABASE_PROVIDER || 'PRISMA';
-    const moduleToImport = provider.toUpperCase() === 'SUPABASE' ? SupabaseModule : PrismaModule;
-
+    // Plus besoin de switch, toujours Prisma
     return {
       module: DatabaseModule,
-      imports: [moduleToImport],
-      exports: [moduleToImport],
+      imports: [PrismaModule],
+      exports: [PrismaModule],
     };
   }
 }

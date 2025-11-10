@@ -7,7 +7,7 @@ import {
 import { CreateTemplateDto } from './dtos/create-template.dto';
 import { TemplateResponseDto } from './dtos/template-response.dto';
 import { TemplateModel } from './models/template.model';
-import * as iTemplateRepository from './interfaces/i-template.repository';
+import * as iTemplateRepository from './repositories/i-template.repository';
 
 @Injectable()
 export class TemplateService {
