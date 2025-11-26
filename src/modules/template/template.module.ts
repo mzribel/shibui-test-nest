@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TemplateService } from './template.service';
 import { TemplateController } from './template.controller';
 
-import { DatabaseModule } from '../../infrastructure/database/database.module';
+import { DatabaseModule } from '@/infrastructure/database/database.module';
 
 @Module({
   imports: [
