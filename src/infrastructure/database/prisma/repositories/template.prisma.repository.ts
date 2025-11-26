@@ -2,7 +2,7 @@ import { CreateTemplateDto } from '../../../../modules/template/dtos/create-temp
 import { TemplateModel } from '../../../../modules/template/models/template.model';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { ITemplateRepository } from '../../../../modules/template/repositories/i-template.repository';
+import { ITemplateRepository } from '../../../../modules/template/repositories/i.template.repository';
 
 @Injectable()
 export class TemplatePrismaRepository implements ITemplateRepository {
