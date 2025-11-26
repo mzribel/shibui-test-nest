@@ -1,5 +1,5 @@
 import { Injectable, Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
-import { IDatabaseProvider } from '../../i-database.provider';
+import { IDatabaseProvider } from '../i.database.provider';
 import { PrismaClient } from '@prisma/client';
 import { ConfigService } from '@nestjs/config';
 

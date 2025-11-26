@@ -1,6 +1,6 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { PrismaModule } from './providers/prisma/prisma.module';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({})
 export class DatabaseModule {
