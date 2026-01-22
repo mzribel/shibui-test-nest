@@ -3,12 +3,13 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
-model template {
-  id     Int    @id @default(autoincrement())
-  name   String @db.VarChar(255)
-  secret String @db.VarChar(255)
+model templates {
+  id     Int     @id(map: "template_pkey") @default(autoincrement())
+  name   String  @db.VarChar
+  secret String? @db.VarChar
 }

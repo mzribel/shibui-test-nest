@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { TemplateModule } from './modules/template/template.module';
-import { DatabaseModule } from './infrastructure/database/database.module';
+import { TemplateModule } from '@modules/template/template.module';
+import { DatabaseModule } from '@infrastructure/database/database.module';
+import { AuthModule } from '@modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { DatabaseModule } from './infrastructure/database/database.module';
     }),
     DatabaseModule.forRoot(),
     DatabaseModule.forFeature(),
+    AuthModule,
     TemplateModule,
   ]
 })

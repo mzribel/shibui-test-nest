@@ -10,7 +10,7 @@ export class TemplatePrismaRepository implements ITemplateRepository {
   }
 
   async create(data: CreateTemplateDto): Promise<TemplateModel> {
-    const template = await this.prisma.template.create({
+    const template = await this.prisma.templates.create({
       data: {
         name: data.name,
         secret: data.secret,
@@ -25,7 +25,7 @@ export class TemplatePrismaRepository implements ITemplateRepository {
   }
 
   async findAll(): Promise<TemplateModel[]> {
-    const templates = await this.prisma.template.findMany();
+    const templates = await this.prisma.templates.findMany();
 
     return templates.map(
       (template) =>
@@ -38,7 +38,7 @@ export class TemplatePrismaRepository implements ITemplateRepository {
   }
 
   async findById(id: number): Promise<TemplateModel | null> {
-    const template = await this.prisma.template.findUnique({
+    const template = await this.prisma.templates.findUnique({
       where: { id },
     });
 
@@ -55,7 +55,7 @@ export class TemplatePrismaRepository implements ITemplateRepository {
 
   async delete(id: number): Promise<void> {
     try {
-      await this.prisma.template.delete({
+      await this.prisma.templates.delete({
         where: { id },
       });
     } catch (error) {
