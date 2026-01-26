@@ -1,46 +1,34 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { CREDENTIAL_AUTH_PROVIDER } from '@infrastructure/auth/auth.providers.module';
-import * as iCredentialAuthProvider from '@infrastructure/auth/i.credential.auth.provider';
-import * as iOAuthProvider from '@infrastructure/auth/i.oauth.provider';
-import { IOAuthProvider, OAuthProvider } from '@infrastructure/auth/i.oauth.provider';
+import * as iCredentialAuthProvider from '@/modules/auth/interfaces/i.credential.auth.provider';
+import { UserService } from "../user/user.service";
+import { Role } from "../user/dto/user.dto";
 
 @Injectable()
 export class AuthService {
   constructor(
     @Inject(CREDENTIAL_AUTH_PROVIDER)
     private readonly credentialAuth: iCredentialAuthProvider.ICredentialAuthProvider,
-    @Inject(CREDENTIAL_AUTH_PROVIDER)
-    private readonly oAuth: iOAuthProvider.IOAuthProvider,
-  ) {}
+    private readonly userService: UserService) {}
 
-  register(email: string, password: string) {
-    return this.credentialAuth.registerWithPassword({ email, password });
+  async registerEntreprise(email: string, password: string) {
+    const data = await this.credentialAuth.registerWithPassword({ email, password });
+    return await this.userService.createUser(
+      data.externalUserId,
+      data.email ?? "",
+      Role.ENTREPRISE
+    )
+  }
+    async registerEtudiant(email: string, password: string) {
+    const data = await this.credentialAuth.registerWithPassword({ email, password });
+    return await this.userService.createUser(
+      data.externalUserId,
+      data.email ?? "",
+      Role.ETUDIANT
+    )
   }
 
-  login(email: string, password: string) {
-    return this.credentialAuth.loginWithPassword({ email, password });
-  }
-
-  async start(provider: OAuthProvider) {
-    const redirectUri = `${process.env.API_BASE_URL}/auth/${provider}/callback`;
-
-    // TODO: stocker state côté serveur (lié à la session/cookie)
-    const { url } = await this.oAuth.getAuthorizationUrl({
-      provider,
-      redirectUri,
-    });
-
-    return { url }; // en pratique tu ne renvoies pas state au client si tu le mets en cookie
-  }
-
-  async callback(provider: OAuthProvider, code: string) {
-    const redirectUri = `${process.env.API_BASE_URL}/auth/${provider}/callback`;
-
-    // TODO: vérifier state côté serveur
-    const identity = await this.oAuth.exchangeCode({ provider, code, redirectUri });
-
-    // TODO: lier/créer user interne (via auth_identities), charger rôles en DB
-    // TODO: émettre ton token API (JWT) / cookie
-    return identity;
+  async login(email: string, password: string) {
+    return await this.credentialAuth.loginWithPassword({ email, password });
   }
 }

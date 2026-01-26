@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { CreateTemplateDto } from './dtos/create-template.dto';
 import { TemplateResponseDto } from './dtos/template-response.dto';
-import { TemplateModel } from './models/template.model';
+import { Template } from './models/template';
 import * as iTemplateRepository from './repositories/i.template.repository';
 
 @Injectable()
@@ -28,7 +28,7 @@ export class TemplateService {
    * Récupère tous les templates
    */
   async findAll(): Promise<TemplateResponseDto[]> {
-    const templates: TemplateModel[] = await this.templateRepository.findAll();
+    const templates: Template[] = await this.templateRepository.findAll();
     return templates.map((template) => template.toResponseDto());
   }
 

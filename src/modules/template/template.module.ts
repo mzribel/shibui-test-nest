@@ -1,16 +1,14 @@
 import { Module } from '@nestjs/common';
 import { TemplateService } from './template.service';
 import { TemplateController } from './template.controller';
-
-import { DatabaseModule } from '@/infrastructure/database/database.module';
+import { PrismaTemplateRepository } from './repositories/template.prisma.repository';
 
 @Module({
-  imports: [
-    DatabaseModule, // Fournit le repository configuré (Supabase ou Prisma)
-  ],
   controllers: [TemplateController],
   providers: [
     TemplateService,
+    PrismaTemplateRepository,
+    { provide: 'ITemplateRepository', useExisting: PrismaTemplateRepository },
   ],
   exports: [TemplateService],
 })

@@ -8,8 +8,27 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-model templates {
-  id     Int     @id(map: "template_pkey") @default(autoincrement())
-  name   String  @db.VarChar
-  secret String? @db.VarChar
+model Template {
+  id     Int @id @default(autoincrement())
+  name   String
+  secret String?
+
+  @@map("templates") 
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  supabaseUserId String @unique @db.Uuid
+  email String @unique
+  role Role @default(ETUDIANT)
+  createdAt DateTime @default(now())
+
+  @@map("users")
+}
+
+enum Role {
+  ADMIN
+  ETUDIANT
+  ENTREPRISE
+  VERIFICATEUR
 }

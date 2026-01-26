@@ -1,20 +1,9 @@
 import { PrismaService } from './prisma.service';
-import { TemplatePrismaRepository } from './repositories/template.prisma.repository';
 import { Global, Module } from '@nestjs/common';
 
-@Global()
+@Global() // Pour que tous les modules y aient accès par défaut
 @Module({
-  providers: [
-    PrismaService,
-    TemplatePrismaRepository,
-    {
-      provide: 'ITemplateRepository',
-      useClass: TemplatePrismaRepository,
-    },
-  ],
-  exports: [
-    PrismaService,
-    'ITemplateRepository'
-  ],
+  providers: [PrismaService],
+  exports: [PrismaService],
 })
 export class PrismaModule {}

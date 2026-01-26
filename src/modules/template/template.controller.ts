@@ -8,15 +8,24 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import { TemplateService } from './template.service';
 import { CreateTemplateDto } from './dtos/create-template.dto';
 import { TemplateResponseDto } from './dtos/template-response.dto';
+import { SupabaseAuthGuard } from '@/common/guards/supabase-auth.guard';
+import { Roles } from '@/common/decorators/roles.decorator';
+import { Role } from '../user/dto/user.dto';
 
 @Controller('templates')
 export class TemplateController {
   constructor(private readonly templateService: TemplateService) {}
-
+  @Get("test")
+  @UseGuards(SupabaseAuthGuard)
+  @Roles(Role.ENTREPRISE)
+  test() {
+    return "oui";
+  }
   @Post()
   async create(
     @Body() createTemplateDto: CreateTemplateDto,
@@ -38,4 +47,6 @@ export class TemplateController {
   async remove(@Param('id') id: number): Promise<void> {
     return this.templateService.delete(id);
   }
+
+
 }
