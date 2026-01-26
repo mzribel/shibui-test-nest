@@ -1,0 +1,2 @@
+- [ ] L'auth guard s'applique partout de force
+- [ ] Problématiques de rolesguard avant authguard

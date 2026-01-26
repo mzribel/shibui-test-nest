@@ -13,7 +13,7 @@ import {
 import { TemplateService } from './template.service';
 import { CreateTemplateDto } from './dtos/create-template.dto';
 import { TemplateResponseDto } from './dtos/template-response.dto';
-import { SupabaseAuthGuard } from '@/common/guards/supabase-auth.guard';
+import { SupabaseAuthGuard } from '@/modules/auth/guards/supabase-auth.guard';
 import { Roles } from '@/common/decorators/roles.decorator';
 import { Role } from '../user/dto/user.dto';
 

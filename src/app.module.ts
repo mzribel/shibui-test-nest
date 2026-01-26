@@ -4,9 +4,10 @@ import { TemplateModule } from '@modules/template/template.module';
 import { AuthModule } from '@modules/auth/auth.module';
 import { PrismaModule } from './infrastructure/database/prisma/prisma.module';
 import { APP_GUARD } from '@nestjs/core';
-import { RolesGuard } from './common/guards/roles.guard';
+import { RolesGuard } from './modules/auth/guards/roles.guard';
 import { UserModule } from './modules/user/user.module';
-import { SupabaseAuthGuard } from './common/guards/supabase-auth.guard';
+import { SupabaseAuthGuard } from './modules/auth/guards/supabase-auth.guard';
+import { RegistrationModule } from './modules/registration/registration.module';
 
 @Module({
   imports: [
@@ -17,11 +18,12 @@ import { SupabaseAuthGuard } from './common/guards/supabase-auth.guard';
     PrismaModule,
     AuthModule,
     TemplateModule,
-    UserModule
+    UserModule,
+    RegistrationModule
   ],
-  providers: [
-    { provide: APP_GUARD, useClass: SupabaseAuthGuard },
-    { provide: APP_GUARD, useClass: RolesGuard }
-  ]
+  // providers: [
+  //   { provide: APP_GUARD, useClass: SupabaseAuthGuard },
+  //   { provide: APP_GUARD, useClass: RolesGuard }
+  // ]
 })
 export class AppModule {}

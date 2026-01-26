@@ -22,8 +22,19 @@ model User {
   email String @unique
   role Role @default(ETUDIANT)
   createdAt DateTime @default(now())
+  companyProfile CompanyProfile?
 
   @@map("users")
+}
+
+model CompanyProfile {
+  userId     Int   @id @unique
+  legalName  String
+  siret      String?  @unique
+  isVerified Boolean  @default(false)
+
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@map("companyProfiles")
 }
 
 enum Role {
