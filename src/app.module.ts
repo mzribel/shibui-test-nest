@@ -8,6 +8,7 @@ import { RolesGuard } from './modules/auth/guards/roles.guard';
 import { UserModule } from './modules/user/user.module';
 import { SupabaseAuthGuard } from './modules/auth/guards/supabase-auth.guard';
 import { RegistrationModule } from './modules/registration/registration.module';
+import { TestModule } from './modules/test/test.module';
 
 @Module({
   imports: [
@@ -19,11 +20,12 @@ import { RegistrationModule } from './modules/registration/registration.module';
     AuthModule,
     TemplateModule,
     UserModule,
-    RegistrationModule
+    RegistrationModule,
+    TestModule
   ],
-  // providers: [
-  //   { provide: APP_GUARD, useClass: SupabaseAuthGuard },
-  //   { provide: APP_GUARD, useClass: RolesGuard }
-  // ]
+  providers: [
+    { provide: APP_GUARD, useClass: SupabaseAuthGuard },
+    { provide: APP_GUARD, useClass: RolesGuard }
+  ]
 })
 export class AppModule {}
