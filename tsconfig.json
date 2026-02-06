@@ -26,6 +26,11 @@
       "@modules/*": ["src/modules/*"],
       "@config/*": ["src/config/*"],
       "@infrastructure/*": ["src/infrastructure/*"]
-    }
-  }
+    },
+    "typeRoots": [
+      "./node_modules/@types", "./src/types"
+    ],
+  },
+  "include": ["src/**/*.ts", "src/**/*.d.ts"]
+
 }

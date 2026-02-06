@@ -8,6 +8,6 @@ import { PrismaUserRepository } from "./repositories/prisma.user.repository";
         PrismaUserRepository,
         { provide: 'IUserRepository', useExisting: PrismaUserRepository}
     ],
-    exports: [UserService]
+    exports: [UserService, "IUserRepository"]
 })
 export class UserModule {}

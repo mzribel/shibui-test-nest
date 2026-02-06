@@ -7,7 +7,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './modules/auth/guards/roles.guard';
 import { UserModule } from './modules/user/user.module';
 import { SupabaseAuthGuard } from './modules/auth/guards/supabase-auth.guard';
-import { RegistrationModule } from './modules/registration/registration.module';
+import { AccountModule } from './modules/account/account.module';
 import { TestModule } from './modules/test/test.module';
 
 @Module({
@@ -18,10 +18,9 @@ import { TestModule } from './modules/test/test.module';
     }),
     PrismaModule,
     AuthModule,
-    TemplateModule,
     UserModule,
-    RegistrationModule,
-    TestModule
+    AccountModule,
+    TestModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: SupabaseAuthGuard },

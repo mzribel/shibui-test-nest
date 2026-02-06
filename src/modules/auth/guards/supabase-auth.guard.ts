@@ -1,4 +1,6 @@
 import { IS_PUBLIC_KEY } from "@/common/decorators/roles.decorator";
+import { User } from "@/modules/user/models/user";
+import { PrismaUserRepository } from "@/modules/user/repositories/prisma.user.repository";
 import {
   CanActivate,
   ExecutionContext,
@@ -9,7 +11,7 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
-import { SupabaseClient, User, createClient } from "@supabase/supabase-js";
+import { SupabaseClient, User as SupabaseUser, createClient } from "@supabase/supabase-js";
 import { Request } from "express";
 
 type RequestWithUser = Request & { user?: User };
@@ -21,7 +23,9 @@ export class SupabaseAuthGuard implements CanActivate {
 
   constructor(
     private readonly reflector: Reflector,
+    @Inject("IUserRepository") private readonly userRepository: PrismaUserRepository, // ou interface
     @Optional() @Inject("SUPABASE_CLIENT") client?: SupabaseClient
+
   ) {
     this.supabaseClient = client || this.initializeSupabaseClient();
   }
@@ -45,12 +49,19 @@ export class SupabaseAuthGuard implements CanActivate {
     if (isPublic) return true;
 
     const request = context.switchToHttp().getRequest<RequestWithUser>();
-    const user = await this.authenticateRequest(request);
+    const supabaseUser = await this.authenticateRequest(request);
+
+    const user = await this.userRepository.findBySupabaseId(supabaseUser.id);
+
+    if (!user) {
+      throw new UnauthorizedException("User not found in application DB");
+    }
+
     request.user = user;
     return true;
   }
 
-  private async authenticateRequest(request: Request): Promise<User> {
+  private async authenticateRequest(request: Request): Promise<SupabaseUser> {
     const token = this.extractTokenFromHeader(request);
     if (!token) throw new UnauthorizedException("No token provided");
 
@@ -70,7 +81,7 @@ export class SupabaseAuthGuard implements CanActivate {
     return token;
   }
 
-  private async getUserFromJWT(token: string): Promise<User | undefined> {
+  private async getUserFromJWT(token: string): Promise<SupabaseUser | undefined> {
     const { data, error } = await this.supabaseClient.auth.getUser(token);
     if (error) return undefined;
     return data.user ?? undefined;

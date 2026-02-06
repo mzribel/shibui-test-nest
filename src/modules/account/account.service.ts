@@ -4,9 +4,10 @@ import { UserService } from "../user/user.service";
 import { CompanyProfileService } from "../companies/company.service";
 import { RegisterCompanyDto } from "./dto/register-company.dto";
 import { Role } from "@prisma/client";
+import { RegisterStudentDto } from "./dto/register-student.dto";
 
 @Injectable()
-export class RegistrationService {
+export class AccountService {
     constructor(
         private readonly authService: AuthService,
         private readonly userService: UserService,
@@ -17,5 +18,9 @@ export class RegistrationService {
         const data = await this.authService.register(dto.email, dto.password);
         const user = await this.userService.createUser(data.externalUserId,data.email ??"", Role.ENTREPRISE)
         const profile = this.companyProfileService.createProfile(user.id, dto.legalName, dto.siret ?? "")
+    }
+
+    async registerStudent(dto:RegisterStudentDto){
+        
     }
 }

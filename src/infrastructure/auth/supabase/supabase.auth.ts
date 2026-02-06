@@ -2,6 +2,7 @@ import { ICredentialAuthProvider } from '@/modules/auth/interfaces/i.credential.
 import { SessionDto } from '@/modules/auth/dto/session.dto';
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import * as process from 'node:process';
+import { BadRequestException, ConflictException, HttpException, UnauthorizedException } from '@nestjs/common';
 
 export class SupabaseAuth implements ICredentialAuthProvider {
   private readonly client: SupabaseClient;
@@ -41,12 +42,22 @@ export class SupabaseAuth implements ICredentialAuthProvider {
     });
 
     if (error) {
-      throw new Error(`SupabaseAuth.registerWithPassword failed: ${error.message}`);
+      switch (error.code) {
+        case "user_already_exists":
+        case "email_exists":
+          throw new ConflictException("User already exists");
+        case "weak_password":
+          throw new BadRequestException("Password is too weak")
+        case "over_request_rate_limit":
+          throw new HttpException("Rate limit reached", 429)
+        default:
+          throw new HttpException("Authentication error", 500)
+      } 
     }
 
     const userId = data.user?.id;
     if (!userId) {
-      throw new Error("SupabaseAuth.registerWithPassword failed: missing user id");
+      throw new HttpException("Authentication error", 500)
     }
     
     const session = data.session ? new SessionDto(
@@ -68,12 +79,20 @@ export class SupabaseAuth implements ICredentialAuthProvider {
     });
 
     if (error) {
-      throw new Error(`SupabaseAuth.loginWithPassword failed: ${error.message}`);
+      switch (error.code) {
+        case "invalid_credentials":
+        case "user_not_found":
+          throw new UnauthorizedException("Email or password incorrect");  
+        case "over_request_rate_limit":
+          throw new HttpException("Rate limit reached", 429)
+        default:
+          throw new HttpException("Authentication error", 500)
+      } 
     }
 
     const userId = data.user?.id;
     if (!userId) {
-      throw new Error("SupabaseAuth.loginWithPassword failed: missing user id");
+      throw new HttpException("Authentication error", 500)
     }
 
     const session = new SessionDto(
