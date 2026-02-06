@@ -15,4 +15,8 @@ export class AuthService {
     async login(email: string, password: string) {
       return await this.credentialAuth.loginWithPassword({ email, password });
     }
+
+    async deleteUser(authId:string) {
+      return this.credentialAuth.deleteUser(authId);
+    }
 }

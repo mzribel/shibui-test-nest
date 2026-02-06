@@ -1,14 +1,13 @@
-import { PrismaService } from "@/infrastructure/database/prisma/prisma.service";
 import { CompanyProfile } from "../models/company-profile";
-import { ICompanyProfileRepository } from "./i.company-profile.repository";
 import { Injectable } from "@nestjs/common";
+import { PrismaDbContext } from "@/infrastructure/database/prisma/prisma-db-context";
 
 @Injectable()
-export class PrismaCompanyProfileRepository implements ICompanyProfileRepository {
-    constructor(private readonly prisma: PrismaService) {}
+export class PrismaCompanyProfileRepository {
+    constructor(private readonly ctx:PrismaDbContext) {}
     
     async createProfile(userId: number, legalName: string, siret?: string) {
-        const data = await this.prisma.companyProfile.create({
+        const data = await this.ctx.db.companyProfile.create({
             data: {
                 userId,
                 legalName,
@@ -22,5 +21,13 @@ export class PrismaCompanyProfileRepository implements ICompanyProfileRepository
     }
     findById(id: number): Promise<CompanyProfile | null> {
         throw new Error("Method not implemented.");
+    }
+
+    async existsBySiret(siret: string): Promise<boolean> {
+        const user = await this.ctx.db.companyProfile.findFirst({
+            where: { siret }
+        });
+
+        return user !== null;
     }
 }

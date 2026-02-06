@@ -30,7 +30,7 @@ model User {
 model CompanyProfile {
   userId     Int   @id @unique
   legalName  String
-  siret      String?  @unique
+  siret      String?  
   isVerified Boolean  @default(false)
 
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)

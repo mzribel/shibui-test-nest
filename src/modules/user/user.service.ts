@@ -1,13 +1,12 @@
 import { Injectable, Inject } from "@nestjs/common";
-import * as iUserRepository from "./repositories/i.user.repository";
 import { Role, UserDto } from "./dto/user.dto";
 import { User } from "./models/user";
+import { PrismaUserRepository } from "./repositories/prisma.user.repository";
 
 @Injectable()
 export class UserService {
     constructor(
-        @Inject('IUserRepository')
-        private readonly userRepository: iUserRepository.IUserRepository
+        private readonly userRepository: PrismaUserRepository
     ){}
 
     async createUser(supabaseUserId:string, email:string, role:Role): Promise<UserDto> {
@@ -19,5 +18,7 @@ export class UserService {
     async getBySupabaseUserId(supabaseUserId:string): Promise<User|null> {
         return this.userRepository.findBySupabaseId(supabaseUserId)
     }
+
+
 
 }

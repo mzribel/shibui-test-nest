@@ -6,11 +6,13 @@ import { BadRequestException, ConflictException, HttpException, UnauthorizedExce
 
 export class SupabaseAuth implements ICredentialAuthProvider {
   private readonly client: SupabaseClient;
-
+  private readonly adminClient:SupabaseClient;
   constructor(params?: {
     supabaseUrl?: string;
     supabaseAnonKey?: string;
+    supabaseServiceRoleKey?:string;
     client?: SupabaseClient; 
+    adminClient?:SupabaseClient;
   }) {
     if (params?.client) {
       this.client = params.client;
@@ -20,9 +22,11 @@ export class SupabaseAuth implements ICredentialAuthProvider {
     // TODO : sortir le client du constructeur tbh
     const supabaseUrl = params?.supabaseUrl ?? process.env.SUPABASE_URL;
     const supabaseAnonKey = params?.supabaseAnonKey ?? process.env.SUPABASE_ANON_KEY;
+    const supabaseServiceRoleKey = params?.supabaseServiceRoleKey ?? process.env.SUPABASE_SERVICE_ROLE_KEY;
 
     if (!supabaseUrl) throw new Error("SupabaseAuth: SUPABASE_URL is missing");
     if (!supabaseAnonKey) throw new Error("SupabaseAuth: SUPABASE_ANON_KEY is missing");
+    if (!supabaseServiceRoleKey) throw new Error("SupabaseAuth: SUPABASE_SERVICE_ROLE_KEY is missing")
 
     this.client = createClient(supabaseUrl, supabaseAnonKey, {
       auth: {
@@ -31,6 +35,11 @@ export class SupabaseAuth implements ICredentialAuthProvider {
         detectSessionInUrl: false,
       },
     });
+        this.adminClient =
+      params?.adminClient ??
+      createClient(supabaseUrl, supabaseServiceRoleKey, {
+        auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
+      });
   }
 
   async registerWithPassword(input: { email: string; password: string }) {
@@ -103,5 +112,13 @@ export class SupabaseAuth implements ICredentialAuthProvider {
       data.session.refresh_token)
       
     return { externalUserId: userId, email: data.user?.email ?? email, session };
+  }
+
+  async deleteUser(authId:string) {
+      console.log("deleting user "+authId);
+      const { data, error } = await this.adminClient.auth.admin.deleteUser(authId)
+
+      if (error) throw error
+      return data
   }
 }

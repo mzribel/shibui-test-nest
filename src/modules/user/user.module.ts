@@ -6,8 +6,7 @@ import { PrismaUserRepository } from "./repositories/prisma.user.repository";
     providers: [
         UserService,
         PrismaUserRepository,
-        { provide: 'IUserRepository', useExisting: PrismaUserRepository}
     ],
-    exports: [UserService, "IUserRepository"]
+    exports: [UserService, PrismaUserRepository]
 })
 export class UserModule {}

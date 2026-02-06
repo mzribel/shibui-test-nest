@@ -23,7 +23,7 @@ export class SupabaseAuthGuard implements CanActivate {
 
   constructor(
     private readonly reflector: Reflector,
-    @Inject("IUserRepository") private readonly userRepository: PrismaUserRepository, // ou interface
+    private readonly userRepository: PrismaUserRepository,
     @Optional() @Inject("SUPABASE_CLIENT") client?: SupabaseClient
 
   ) {
